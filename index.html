@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>RPS-Multiplayer | Mario Melchor</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-	  crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="assets/styles.css">
-	<script src="assets/js/app.js"></script>
+  <meta charset="UTF-8">
+  <title>RPS-Multiplayer | Mario Melchor</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+  <script src="assets/js/db-connection.js"></script>
+  <script src="assets/js/app.js"></script>
 </head>
 <body>
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="name-input">Your Name</label>
+          <input id="name-input" type="text" class="form-control" placeholder="Enter Your Name">
+        </div>
+        <button id="btn-submit" type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div><!-- /.col -->
+   </div><!-- /.row -->
+
+  <div class="row">
+    <div class="col-sm-6">
+      <h1 id="player-name-1">Waiting for Player</h1>
+    </div><!-- /.col -->
+    <div class="col-sm-6">
+      <h1 id="player-name-2">Waiting for Player</h1>
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+
+</div><!-- /.container -->
 
 </body>
 </html>
