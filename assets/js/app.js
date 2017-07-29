@@ -1,18 +1,43 @@
 $(document).ready(function() {
 
-  var messageList = database.ref('message');
+  var playerKeys  = [];
+  var players     = database.ref( 'players' );
+  var turn        = database.ref( 'turn' );
+  var messageList = database.ref( 'message' );
 
   // When adding Name
   $('#btn-name-submit').on('click', function(e) {
     e.preventDefault();
-    console.log('Clicked');
     var playerName = $('#name-input').val();
 
-    database.ref().set({
-      player: playerName,
-      message: ''
-    });
+    if ( playersConnected === 1 ) {
+      database.ref().set({
+        players: '',
+        turn: '',
+        message: ''
+      });
+    }
 
+    addPlayer( playerName );
+
+    $('#form-submit').hide();
+    $('#player-name').html( playerName );
+    // $('#player-number').html( playerNumber );
+
+  });
+
+  function addPlayer( playerName ){
+    var newPlayer = players.push();
+    newPlayer.set({
+      name: playerName,
+      wins: 0,
+      losses: 0
+    });
+  }
+
+  // When new player is added to players add key to array
+  players.on('child_added', function( data ) {
+    playerKeys.push(data.key);
   });
 
   // Comment form when clicking submit
@@ -43,7 +68,7 @@ $(document).ready(function() {
 
   // Checking for updated values in DB
   database.ref().on("value", function( snapshot ) {
-    console.log( snapshot.val() );
+    // console.log( snapshot.val() );
 
     // Add player name to DOM
     $('#player-name-1').html( snapshot.val().player );
