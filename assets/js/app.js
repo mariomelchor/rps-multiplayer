@@ -1,13 +1,22 @@
 $(document).ready(function() {
 
-  var playerKeys  = [];
+  // var playerKeys  = [];
+  var playerKeys = { player_1: '',  player_2: '' };
   var players     = database.ref( 'players' );
   var turn        = database.ref( 'turn' );
   var messageList = database.ref( 'message' );
+  var playerCount = 0;
+  $('#player').hide();
 
   // When adding Name
   $('#btn-name-submit').on('click', function(e) {
     e.preventDefault();
+
+    if ( playersConnected > 2 || playerCount > 2 ) {
+      alert('There are 2 players already playing wait your turn!!!');
+      return;
+    }
+
     var playerName = $('#name-input').val();
 
     if ( playersConnected === 1 ) {
@@ -21,8 +30,8 @@ $(document).ready(function() {
     addPlayer( playerName );
 
     $('#form-submit').hide();
+    $('#player').show();
     $('#player-name').html( playerName );
-    // $('#player-number').html( playerNumber );
 
   });
 
@@ -37,7 +46,23 @@ $(document).ready(function() {
 
   // When new player is added to players add key to array
   players.on('child_added', function( data ) {
-    playerKeys.push(data.key);
+    playerCount++;
+    $('#name-input').val('');
+
+    playerKeys[ 'player_' + playerCount ] = data.key;
+    $('#player-name-' + playerCount ).html( data.val().name );
+    $('#player-number').html( playerCount );
+
+    players.once('value').then( function(snapshot) {
+        var children = snapshot.numChildren();
+
+      if ( children === 2 ) {
+        database.ref().update({ turn: 1 });
+        $('#player-box-1').addClass('player-active')
+      }
+
+    });
+
   });
 
   // Comment form when clicking submit
