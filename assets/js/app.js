@@ -6,23 +6,25 @@ $(document).ready(function() {
   var turn        = database.ref( 'turn' );
   var messageList = database.ref( 'message' );
   var playerCount = 0;
+
   $('#player').hide();
 
   // When adding Name
   $('#btn-name-submit').on('click', function(e) {
     e.preventDefault();
 
-    if ( playersConnected > 2 || playerCount > 2 ) {
+    if ( playerCount > 2 ) {
       alert('There are 2 players already playing wait your turn!!!');
       return;
     }
 
     var playerName = $('#name-input').val();
+    $('#btn-comment-submit').attr('data-sender', playerName);
 
-    if ( playersConnected === 1 ) {
+    if ( playerCount < 1 ) {
       database.ref().set({
         players: '',
-        turn: '',
+        turn: 0,
         message: ''
       });
     }
@@ -35,6 +37,7 @@ $(document).ready(function() {
 
   });
 
+  // Adds player object in DB
   function addPlayer( playerName ){
     var newPlayer = players.push();
     newPlayer.set({
@@ -71,7 +74,7 @@ $(document).ready(function() {
   // Generates Paper, Rock, Scissors buttons
   function playerOptions( playerNumber ) {
 
-    $('#player-box-'+ playerNumber).addClass('player-active');
+    // $('#player-box-'+ playerNumber).addClass('player-active');
     var choices = $('#player-box-'+ playerNumber + ' #player-choices');
     var choicesArr = [ 'Paper', 'Rock', 'Scissors' ];
     var currentPlayer = playerKeys[ 'player_' + playerNumber ];
@@ -95,25 +98,141 @@ $(document).ready(function() {
     });
 
     $(this).parent().html( choice );
-    $('#player-box-' + player ).removeClass('player-active');
 
     var nextTurn = ( player === 1 ) ? 2 : 1 ;
 
-    database.ref().update({ turn: nextTurn });
-    playerOptions( nextTurn );
+    database.ref().update({
+      turn: nextTurn
+    })
+
+    // checkWinner();
 
   });
+
+  // Checks value of turn
+  turn.on('value', function(snapshot) {
+    var turn = snapshot.val();
+
+    if ( turn == 1 ) {
+      $('#player-box-1').addClass('player-active');
+      $('#player-box-2').removeClass('player-active');
+      checkWinner();
+      playerOptions(1);
+      $('#player-box-2 #player-choices').empty();
+    } else if ( turn == 2 ) {
+      $('#player-box-2').addClass('player-active');
+      $('#player-box-1').removeClass('player-active');
+      checkWinner();
+      playerOptions(2);
+      $('#player-box-1 #player-choices').empty();
+    } else if ( turn == 3 ){
+      //Nothin yet
+    }
+  });
+
+  function checkWinner() {
+    players.once('value', function(snapshot) {
+
+      var player_1 = snapshot.val()[playerKeys.player_1];
+      var player_2 = snapshot.val()[playerKeys.player_2];
+      var player_1_choice = player_1.choice;
+      var player_2_choice = player_2.choice;
+
+      // is there choices
+      if ( player_1_choice == '' || player_2_choice == '' ) {
+        // console.log('No Choice selected');
+      }
+
+      // Who won
+      if ( player_1_choice == player_2_choice ) {
+        $('#game-results').html('Tied Game');
+      }
+
+      else if ( player_1_choice == 'Rock' ) {
+
+        if ( player_2_choice == 'Paper' ) {
+          $('#game-results').html('Player 2 Won');
+
+          updateWinsDB();
+        }
+        else if ( player_2_choice == 'Scissors' ) {
+          $('#game-results').html('Player 1 Won');
+
+          updateWinsDB();
+        }
+
+      }
+
+      else if ( player_1_choice == 'Paper' ) {
+        if ( player_2_choice == 'Rock' ) {
+          $('#game-results').html('Player 1 Won');
+
+          player1wins++;
+
+          database.ref( 'players/' + playerKeys['player_1'] ).update({
+            wins: player1wins
+          });
+
+        }
+        else if ( player_2_choice == 'Scissors' ) {
+          $('#game-results').html('Player 2 Won');
+
+          player2wins++;
+
+          database.ref( 'players/' + playerKeys['player_2'] ).update({
+            wins: player2wins
+          });
+
+        }
+      }
+
+      else if ( player_1_choice == 'Scissors' ) {
+        if ( player_2_choice == 'Rock' ) {
+          $('#game-results').html('Player 2 Won');
+
+          player2wins++;
+
+            database.ref( 'players/' + playerKeys['player_2'] ).update({
+              wins: player2wins,
+            });
+
+        } else if (player_2_choice == 'Paper') {
+          $('#game-results').html('Player 1 Won');
+
+          player1wins++;
+
+            database.ref( 'players/' + playerKeys['player_1'] ).update({
+              wins: player1wins
+            });
+
+        }
+      }
+
+    });
+  }
+
+  function updateWinsDB() {
+
+    var player1wins = 0;
+    var player2wins = 0;
+    player2wins++;
+
+    database.ref( 'players/' + playerKeys['player_2'] ).update({
+      wins: player2wins
+    });
+  }
+
 
   // Comment form when clicking submit
   $('#btn-comment-submit').on('click', function(e) {
     e.preventDefault();
 
     var chatMessage = $('#comment-input').val();
-    addMessage( chatMessage );
+    var sender = $( $(this) ).attr('data-sender');
+    addMessage( chatMessage, sender );
 
     // Clear Textarea
     $('#comment-input').val('');
-
   });
 
   // Comment form when hitting enter
@@ -122,29 +241,30 @@ $(document).ready(function() {
       e.preventDefault();
 
       var chatMessage = $(this).val();
-      addMessage( chatMessage );
+      var sender = $('#btn-comment-submit').attr('data-sender');
+      addMessage( chatMessage, sender );
 
       $(this).val('');
-
     }
   });
 
   // Adds Message to firebase
-  function addMessage( chatMessage ) {
+  function addMessage( chatMessage, sender ) {
     var newMessage = messageList.push();
     newMessage.set({
-      'text': chatMessage
+      'text': chatMessage,
+      'sender': sender
     });
   }
 
   // When new message is added to the messageList
   messageList.on('child_added', function(data) {
-    renderMessage( data.val().text );
+    renderMessage( data.val().text, data.val().sender );
   });
 
   // Render message in DOM
-  function renderMessage( message ) {
-    var chatMessage = '<blockquote><p>'+  message +'</p><footer>Someone famous in <cite title="Source Title">User</cite></footer></blockquote>';
+  function renderMessage( message, sender ) {
+    var chatMessage = '<blockquote class="blockquote-message"><p>'+  message +'</p><footer>'+ sender +'</footer></blockquote>';
     $('#chat').append( chatMessage );
   }
 

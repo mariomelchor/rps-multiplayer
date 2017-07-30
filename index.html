@@ -5,6 +5,7 @@
   <title>RPS-Multiplayer | Mario Melchor</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Bungee|Roboto" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
@@ -13,54 +14,66 @@
 </head>
 <body>
 
-<div class="container">
+<div class="site-header text-center">
+  <h1>Rock &bull; Paper &bull; Scissors</h1>
+</div><!-- /.site-header -->
 
-  <div class="row">
-    <div class="col-sm-12">
+<div class="site-subheader text-center">
+  <form id="form-submit" class="form-inline">
+    <div class="form-group">
+      <label for="name-input" class="sr-only">Your Name</label>
+      <input id="name-input" type="text" class="form-control" placeholder="Enter Your Name">
+    </div>
+    <button id="btn-name-submit" type="submit" class="btn btn-default">Submit</button>
+  </form><!-- /#form-submit -->
 
-      <form id="form-submit" class="form-inline">
-        <div class="form-group">
-          <label for="name-input">Your Name</label>
-          <input id="name-input" type="text" class="form-control" placeholder="Enter Your Name">
-        </div>
-        <button id="btn-name-submit" type="submit" class="btn btn-default">Submit</button>
-      </form>
+  <div id="player" class="player"><h2 class="player-info">Hi, <span id="player-name" class="text-uppercase"></span> You are Player <span id="player-number"></span></h2></div><!-- /#player -->
+</div><!-- /.site-subheader -->
 
-      <div id="player"> Hi, <span id="player-name"></span> You are Player <span id="player-number"></span></div><!-- /.player -->
-    </div><!-- /.col -->
-   </div><!-- /.row -->
+<div class="site-container container">
 
-  <div class="row">
+  <div class="players-row row">
     <div id="player-box-1" class="col-sm-6">
-      <h1 id="player-name-1">Waiting for Player</h1>
+      <h3 id="player-name-1" class="text-uppercase">Waiting for Player</h3>
 
       <div id="player-choices"></div><!-- /#player-choices -->
-    </div><!-- /.col -->
+    </div><!-- /#player-box-1 -->
     <div id="player-box-2" class="col-sm-6">
-      <h1 id="player-name-2">Waiting for Player</h1>
+      <h3 id="player-name-2" class="text-uppercase">Waiting for Player</h3>
 
       <div id="player-choices"></div><!-- /#player-choices -->
+    </div><!-- /#player-box-2 -->
+  </div><!-- /.row -->
+
+  <div id="game-results"></div><!-- /#game-results -->
+
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <div class="well">
+
+        <div id="chat"></div><!-- /#chat -->
+
+        <hr>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form id="comment-form">
+              <div class="form-group">
+                <label for="comment-input">Message</label>
+                <textarea id="comment-input" type="text" class="form-control" placeholder="Type Your Message"></textarea>
+              </div>
+              <button id="btn-comment-submit" type="submit" class="btn btn-primary btn-block btn-lg">Submit</button>
+            </form><!-- /#comment-form -->
+          </div>
+        </div>
+
+      </div><!-- /.well -->
     </div><!-- /.col -->
   </div><!-- /.row -->
 
-  <div class="row">
-    <div class="col-sm-12">
-
-      <div id="chat"></div>
-
-      <form id="comment-form">
-        <div class="form-group">
-          <label for="comment-input">Message</label>
-          <textarea id="comment-input" type="text" class="form-control" placeholder="Type Your Message"></textarea>
-        </div>
-        <button id="btn-comment-submit" type="submit" class="btn btn-default btn-block btn-lg">Submit</button>
-      </form>
-    </div>
-  </div>
-
   <div id="connected-viewers"></div>
 
-</div><!-- /.container -->
+</div><!-- /site-.container -->
 
 </body>
 </html>

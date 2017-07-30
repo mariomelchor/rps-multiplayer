@@ -1,3 +1,33 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+.site-header {
+	color: #fff;
+	font-family: 'Bungee', cursive;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	background: #000;
+}
+.site-subheader {
+	color: #fff;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background: #444242;
+}
+.site-container,
+.players-row {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+.player .player-info{
+	margin-top: 0;
+	margin-bottom: 0;
+}
 .player-active {
 	border: solid 1px #000;
+}
+.blockquote-message {
+	font-size: 16px;
+	padding: 5px 10px;
+	margin-bottom: 5px;
 }
