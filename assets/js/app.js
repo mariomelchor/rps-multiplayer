@@ -40,7 +40,8 @@ $(document).ready(function() {
     newPlayer.set({
       name: playerName,
       wins: 0,
-      losses: 0
+      losses: 0,
+      choice: ''
     });
   }
 
@@ -49,19 +50,57 @@ $(document).ready(function() {
     playerCount++;
     $('#name-input').val('');
 
+    // Add DB Player Keys to array
     playerKeys[ 'player_' + playerCount ] = data.key;
     $('#player-name-' + playerCount ).html( data.val().name );
     $('#player-number').html( playerCount );
 
+    // Check how many players in players object
     players.once('value').then( function(snapshot) {
-        var children = snapshot.numChildren();
+      var children = snapshot.numChildren();
 
       if ( children === 2 ) {
         database.ref().update({ turn: 1 });
-        $('#player-box-1').addClass('player-active')
+        playerOptions( 1 );
       }
 
     });
+
+  });
+
+  // Generates Paper, Rock, Scissors buttons
+  function playerOptions( playerNumber ) {
+
+    $('#player-box-'+ playerNumber).addClass('player-active');
+    var choices = $('#player-box-'+ playerNumber + ' #player-choices');
+    var choicesArr = [ 'Paper', 'Rock', 'Scissors' ];
+    var currentPlayer = playerKeys[ 'player_' + playerNumber ];
+    choices.empty();
+
+    $.each( choicesArr, function( index, val ) {
+       choices.append('<a href="#" data-player-id="'+ currentPlayer +'" data-player="'+  playerNumber +'" class="btn btn-block btn-default btn-choice">'+ val +'</a>')
+    });
+  }
+
+  // Saves choice to DB
+  $(document).on('click', '.btn-choice', function(event) {
+    event.preventDefault();
+    var choice    = $(this).html();
+    var playerId  = $(this).data('player-id');
+    var player    = $(this).data('player');
+
+    var playerRef = database.ref( 'players/' + playerId );
+    playerRef.update({
+      choice: choice
+    });
+
+    $(this).parent().html( choice );
+    $('#player-box-' + player ).removeClass('player-active');
+
+    var nextTurn = ( player === 1 ) ? 2 : 1 ;
+
+    database.ref().update({ turn: nextTurn });
+    playerOptions( nextTurn );
 
   });
 
@@ -88,19 +127,6 @@ $(document).ready(function() {
       $(this).val('');
 
     }
-  });
-
-
-  // Checking for updated values in DB
-  database.ref().on("value", function( snapshot ) {
-    // console.log( snapshot.val() );
-
-    // Add player name to DOM
-    $('#player-name-1').html( snapshot.val().player );
-
-
-  }, function( error ) {
-    console.log("The read failed: " + error.code);
   });
 
   // Adds Message to firebase
