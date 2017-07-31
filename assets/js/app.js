@@ -6,6 +6,8 @@ $(document).ready(function() {
   var turn        = database.ref( 'turn' );
   var messageList = database.ref( 'message' );
   var playerCount = 0;
+  var player1wins = 0;
+  var player2wins = 0;
 
   $('#player').hide();
 
@@ -105,7 +107,9 @@ $(document).ready(function() {
       turn: nextTurn
     })
 
-    // checkWinner();
+    if ( player == 2 ) {
+      checkWinner();
+    }
 
   });
 
@@ -116,13 +120,11 @@ $(document).ready(function() {
     if ( turn == 1 ) {
       $('#player-box-1').addClass('player-active');
       $('#player-box-2').removeClass('player-active');
-      checkWinner();
       playerOptions(1);
       $('#player-box-2 #player-choices').empty();
     } else if ( turn == 2 ) {
       $('#player-box-2').addClass('player-active');
       $('#player-box-1').removeClass('player-active');
-      checkWinner();
       playerOptions(2);
       $('#player-box-1 #player-choices').empty();
     } else if ( turn == 3 ){
@@ -130,6 +132,7 @@ $(document).ready(function() {
     }
   });
 
+  // Checks for Winner
   function checkWinner() {
     players.once('value', function(snapshot) {
 
@@ -138,14 +141,17 @@ $(document).ready(function() {
       var player_1_choice = player_1.choice;
       var player_2_choice = player_2.choice;
 
-      // is there choices
+      console.log('Player 1: ' + player_1_choice + ' Player 2: ' + player_2_choice );
+
+      // Choices are empty
       if ( player_1_choice == '' || player_2_choice == '' ) {
-        // console.log('No Choice selected');
+        console.log('No Choice selected');
       }
 
       // Who won
       if ( player_1_choice == player_2_choice ) {
         $('#game-results').html('Tied Game');
+        console.log('Tied');
       }
 
       else if ( player_1_choice == 'Rock' ) {
@@ -153,12 +159,16 @@ $(document).ready(function() {
         if ( player_2_choice == 'Paper' ) {
           $('#game-results').html('Player 2 Won');
 
-          updateWinsDB();
+          player2wins++;
+          updateWinsDB( 2, player2wins );
+          console.log('Player 2 Won');
         }
         else if ( player_2_choice == 'Scissors' ) {
           $('#game-results').html('Player 1 Won');
 
-          updateWinsDB();
+          player1wins++;
+          updateWinsDB( 1, player1wins );
+          console.log('Player 1 Won');
         }
 
       }
@@ -168,20 +178,16 @@ $(document).ready(function() {
           $('#game-results').html('Player 1 Won');
 
           player1wins++;
-
-          database.ref( 'players/' + playerKeys['player_1'] ).update({
-            wins: player1wins
-          });
+          updateWinsDB( 1, player1wins );
+          console.log('Player 1 Won');
 
         }
         else if ( player_2_choice == 'Scissors' ) {
           $('#game-results').html('Player 2 Won');
 
           player2wins++;
-
-          database.ref( 'players/' + playerKeys['player_2'] ).update({
-            wins: player2wins
-          });
+          updateWinsDB( 2, player2wins );
+          console.log('Player 2 Won');
 
         }
       }
@@ -191,19 +197,15 @@ $(document).ready(function() {
           $('#game-results').html('Player 2 Won');
 
           player2wins++;
-
-            database.ref( 'players/' + playerKeys['player_2'] ).update({
-              wins: player2wins,
-            });
+          updateWinsDB( 2, player2wins );
+          console.log('Player 2 Won');
 
         } else if (player_2_choice == 'Paper') {
           $('#game-results').html('Player 1 Won');
 
           player1wins++;
-
-            database.ref( 'players/' + playerKeys['player_1'] ).update({
-              wins: player1wins
-            });
+          updateWinsDB( 1, player1wins );
+          console.log('Player 1 Won');;
 
         }
       }
@@ -211,14 +213,11 @@ $(document).ready(function() {
     });
   }
 
-  function updateWinsDB() {
-
-    var player1wins = 0;
-    var player2wins = 0;
-    player2wins++;
-
-    database.ref( 'players/' + playerKeys['player_2'] ).update({
-      wins: player2wins
+  // Update wind in DB
+  function updateWinsDB( player, wins ) {
+    console.log( 'Player: ' + player + ' Has: ' + wins );
+    database.ref( 'players/' + playerKeys['player_'+ player ] ).update({
+      wins: wins
     });
   }
 
