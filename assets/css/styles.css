@@ -1,11 +1,13 @@
 body {
+	color: #fff;
 	font-family: 'Roboto', sans-serif;
+	background: #333;
 }
 .site-header {
 	color: #ffea00;
 	font-family: 'Bungee', cursive;
-	padding-top: 50px;
-	padding-bottom: 50px;
+	padding-top: 15px;
+	padding-bottom: 25px;
 	background: #000;
 }
 .site-subheader {
@@ -17,6 +19,9 @@ body {
 .site-subheader .container {
 	max-width: 600px;
 }
+.site-subheader .form-group {
+	margin-bottom: 0;
+}
 .site-subheader input[type="text"],
 .site-subheader button[type="submit"] {
 	float: left;
@@ -27,28 +32,55 @@ body {
 	background-color: #fff;
 }
 .site-subheader button[type="submit"] {
-	color: #000;
-	font-weight: bold;
-	margin-left: -20%;
-	width: 20%;
-	background: #ffea00;
-	border-color: #fff;
+	color: #fff;
+	font-family: 'Bungee', cursive;
 	text-transform: uppercase;
+	width: 20%;
+	margin-left: -20%;
+	border-color: #000;
+	background: #000;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
-.site-container,
+.game-results {
+	color: #fff;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
 .players-row {
-	padding-top: 50px;
-	padding-bottom: 50px;
+	font-family: 'Bungee', cursive;
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 .player .player-info{
 	margin-top: 0;
 	margin-bottom: 0;
 }
 .player-active {
-	border: solid 1px #000;
+	color: #ffea00;
+	border: solid 2px #ffea00;
+}
+.player-choices {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	border-bottom: solid 1px #666;
+	border-top: solid 1px #666;
+	min-height: 144px;
+}
+.player-stats {
+	color: #fff;
+	font-family: 'Roboto', sans-serif;
+	margin-bottom: 15px;
 }
 .blockquote-message {
 	font-size: 16px;
 	padding: 5px 10px;
 	margin-bottom: 5px;
+}
+.btn-choice {
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
 }
