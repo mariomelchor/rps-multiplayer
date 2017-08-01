@@ -98,14 +98,12 @@ $(document).ready(function() {
 
     // Display Player 1 wins
     database.ref( 'players/' + playerKeys['player_1'] + '/wins' ).on('value', function(snapshot) {
-      console.log( snapshot.val() );
       $('#game-results').html('<h3>Player 1 Wins</h3>').addClass('flash');
 
     });
 
     // Display Player 2 wins
     database.ref( 'players/' + playerKeys['player_2'] + '/wins' ).on('value', function(snapshot) {
-      console.log( snapshot.val() );
       $('#game-results').html('<h3>Player 2 Wins</h3>').addClass('flash');
     });
 
