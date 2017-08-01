@@ -104,7 +104,7 @@ $(document).ready(function() {
 
   // Generates Paper, Rock, Scissors buttons
   function playerOptions( playerNumber ) {
-    var choices       = $('#player-box-'+ playerNumber + ' #player-choices');
+    var choices       = $('#player-box-'+ playerNumber + ' .player-choices');
     var choicesArr    = [ 'Rock', 'Paper', 'Scissors' ];
     var iconsArr      = [ 'icon-rock.png', 'icon-paper.png', 'icon-scissors.png' ];
     var currentPlayer = playerKeys[ 'player_' + playerNumber ];

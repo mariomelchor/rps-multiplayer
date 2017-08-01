@@ -11,13 +11,13 @@ body {
 	background: #000;
 }
 .site-subheader {
-	color: #ffea00;
+
 	padding-top: 20px;
 	padding-bottom: 20px;
 	background: #444242;
 }
 .site-subheader .container {
-	max-width: 600px;
+	max-width: 600px;	color: #ffea00;
 }
 .site-subheader .form-group {
 	margin-bottom: 0;
@@ -89,6 +89,9 @@ body {
 	padding: 5px 10px;
 	margin-bottom: 5px;
 }
+.blockquote-message footer {
+	color: #ffea00;
+}
 .btn-choice {
 	display: inline-block;
 	margin-left: 10px;
@@ -102,4 +105,31 @@ body {
 }
 .tooltip {
 	font-size: 16px;
+}
+.well {
+	padding: 20px;
+	background-color: #272727;
+	border: none;
+}
+.well blockquote {
+	border-color: #000;
+	border-color: rgba(0,0,0,.75);
+}
+.btn-primary {
+	background-color: #000;
+	border-color: #000;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+	background-color: #444242;
+	border-color: #444242;
+}
+.btn-primary:active
+.btn-primary:active:hover,
+.btn-primary:active:focus {
+	background-color: #000;
+	border-color: #000;
+}
+.btn-choice:hover img {
+	opacity: .50;
 }
