@@ -80,32 +80,44 @@ $(document).ready(function() {
 
     // Updated Wins/Losses in DOM Player1
     database.ref( 'players/' + playerKeys['player_1'] ).on('value', function(snapshot) {
-
       player1wins = snapshot.val().wins;
       player1losses = snapshot.val().losses;
 
       $('#player-box-1 .player-wins').html( player1wins );
       $('#player-box-1 .player-losses').html( player1losses );
-
     });
 
-    // Updated Wins/Losses in DOM in DOM Player1
+    // Updated Wins/Losses in DOM in DOM Player2
     database.ref( 'players/' + playerKeys['player_2'] ).on('value', function(snapshot) {
-
       player2wins = snapshot.val().wins;
       player2losses = snapshot.val().losses;
 
       $('#player-box-2 .player-wins').html( player2wins );
       $('#player-box-2 .player-losses').html( player2losses );
+    });
 
+    // Display Player 1 wins
+    database.ref( 'players/' + playerKeys['player_1'] + '/wins' ).on('value', function(snapshot) {
+      console.log( snapshot.val() );
+      $('#game-results').html('<h3>Player 1 Wins</h3>').addClass('flash');
+
+    });
+
+    // Display Player 2 wins
+    database.ref( 'players/' + playerKeys['player_2'] + '/wins' ).on('value', function(snapshot) {
+      console.log( snapshot.val() );
+      $('#game-results').html('<h3>Player 2 Wins</h3>').addClass('flash');
     });
 
   });
 
   // Generates Paper, Rock, Scissors buttons
   function playerOptions( playerNumber ) {
+
+    $('#game-results').html('<h3>&nbsp;</h3>').removeClass('flash');
+
     var choices       = $('#player-box-'+ playerNumber + ' .player-choices');
-    var choicesArr    = [ 'Rock', 'Paper', 'Scissors' ];
+    var choicesArr    = [ 'rock', 'paper', 'scissors' ];
     var iconsArr      = [ 'icon-rock.png', 'icon-paper.png', 'icon-scissors.png' ];
     var currentPlayer = playerKeys[ 'player_' + playerNumber ];
     choices.empty();
@@ -125,14 +137,14 @@ $(document).ready(function() {
     var choice    = $(this).data('choice');
     var playerId  = $(this).data('player-id');
     var player    = $(this).data('player');
-    $('#game-results').html('<h3>&nbsp;</h3>').removeClass('flash');
+    var iconImg = '<img src="assets/images/icon-'+  choice +'.png" alt="'+ choice +'" width="100" data-toggle="tooltip" data-placement="bottom" title="'+ choice +'">';
 
     var playerRef = database.ref( 'players/' + playerId );
     playerRef.update({
       choice: choice
     });
 
-    $(this).parent().html( choice );
+    $(this).parent().html( iconImg );
 
     // Next Turn
     var nextTurn = ( player === 1 ) ? 2 : 1 ;
@@ -186,15 +198,15 @@ $(document).ready(function() {
         $('#game-results').html('<h3>Tied Game</h3>').addClass('flash');
       }
 
-      else if ( player_1_choice == 'Rock' ) {
-        if ( player_2_choice == 'Paper' ) {
+      else if ( player_1_choice == 'rock' ) {
+        if ( player_2_choice == 'paper' ) {
 
           player2wins++;
           player1losses++;
           updateWinsDB( 2, player2wins );
           updateLossesDB( 1, player1losses );
         }
-        else if ( player_2_choice == 'Scissors' ) {
+        else if ( player_2_choice == 'scissors' ) {
 
           player1wins++;
           player2losses++;
@@ -203,15 +215,15 @@ $(document).ready(function() {
         }
       }
 
-      else if ( player_1_choice == 'Paper' ) {
-        if ( player_2_choice == 'Rock' ) {
+      else if ( player_1_choice == 'paper' ) {
+        if ( player_2_choice == 'rock' ) {
 
           player1wins++;
           player2losses++;
           updateWinsDB( 1, player1wins );
           updateLossesDB( 2, player2losses );
         }
-        else if ( player_2_choice == 'Scissors' ) {
+        else if ( player_2_choice == 'scissors' ) {
 
           player2wins++;
           player1losses++;
@@ -220,8 +232,8 @@ $(document).ready(function() {
         }
       }
 
-      else if ( player_1_choice == 'Scissors' ) {
-        if ( player_2_choice == 'Rock' ) {
+      else if ( player_1_choice == 'scissors' ) {
+        if ( player_2_choice == 'rock' ) {
 
           player2wins++;
           player1losses++;
@@ -229,7 +241,7 @@ $(document).ready(function() {
           updateLossesDB( 1, player1losses );
         }
 
-        else if (player_2_choice == 'Paper') {
+        else if (player_2_choice == 'paper') {
 
           player1wins++;
           player2losses++;
@@ -248,7 +260,6 @@ $(document).ready(function() {
       wins: wins
     });
 
-    $('#game-results').html('<h3>Player ' + player + ' Won</h3>').addClass('flash');
   }
 
   // Update losses in DB
