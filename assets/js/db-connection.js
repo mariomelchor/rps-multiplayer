@@ -45,5 +45,5 @@ connectionsRef.on("value", function(snap) {
 
   playersConnected = snap.numChildren();
 
-  $("#connected-viewers").html( playersConnected );
+  console.log( 'Connected Viewers:' + playersConnected );
 });

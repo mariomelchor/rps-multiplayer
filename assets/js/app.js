@@ -11,6 +11,11 @@ $(document).ready(function() {
   var player2wins = 0;
   var player2losses = 0;
 
+  // Tooltip for buttons
+  $(document).tooltip({
+    selector: '[data-toggle="tooltip"]'
+  });
+
   $('#player').hide();
 
   // When adding Name
@@ -59,7 +64,7 @@ $(document).ready(function() {
 
     // Add DB Player Keys to array
     playerKeys[ 'player_' + playerCount ] = data.key;
-    $('#player-name-' + playerCount ).html( data.val().name );
+    $('#player-name-' + playerCount ).html( data.val().name ).removeClass('infinite');
     $('#player-number').html( playerCount );
 
     // Check how many players in players object
@@ -73,25 +78,44 @@ $(document).ready(function() {
 
     });
 
+    // Updated Wins/Losses in DOM Player1
+    database.ref( 'players/' + playerKeys['player_1'] ).on('value', function(snapshot) {
+
+      player1wins = snapshot.val().wins;
+      player1losses = snapshot.val().losses;
+
+      $('#player-box-1 .player-wins').html( player1wins );
+      $('#player-box-1 .player-losses').html( player1losses );
+
+    });
+
+    // Updated Wins/Losses in DOM in DOM Player1
+    database.ref( 'players/' + playerKeys['player_2'] ).on('value', function(snapshot) {
+
+      player2wins = snapshot.val().wins;
+      player2losses = snapshot.val().losses;
+
+      $('#player-box-2 .player-wins').html( player2wins );
+      $('#player-box-2 .player-losses').html( player2losses );
+
+    });
+
   });
 
   // Generates Paper, Rock, Scissors buttons
   function playerOptions( playerNumber ) {
-
-    var choices = $('#player-box-'+ playerNumber + ' #player-choices');
-    var choicesArr = [ 'Rock', 'Paper', 'Scissors' ];
-    var iconsArr = [ 'icon-rock.png', 'icon-paper.png', 'icon-scissors.png' ];
+    var choices       = $('#player-box-'+ playerNumber + ' #player-choices');
+    var choicesArr    = [ 'Rock', 'Paper', 'Scissors' ];
+    var iconsArr      = [ 'icon-rock.png', 'icon-paper.png', 'icon-scissors.png' ];
     var currentPlayer = playerKeys[ 'player_' + playerNumber ];
     choices.empty();
 
     $.each( choicesArr, function( index, val ) {
       var icon = $('<a href="#" data-player-id="'+ currentPlayer +'" data-player="'+  playerNumber +'" data-choice="'+ val +'">');
       icon.addClass('btn-choice');
-      var iconImg = '<img src="assets/images/'+  iconsArr[index] +'" alt="'+ val +'" width="100" >';
+      var iconImg = '<img src="assets/images/'+  iconsArr[index] +'" alt="'+ val +'" width="100" data-toggle="tooltip" data-placement="bottom" title="'+ val +'">';
       icon.html(iconImg);
       choices.append( icon );
-
-       // choices.append('<a href="#" data-player-id="'+ currentPlayer +'" data-player="'+  playerNumber +'" class="btn btn-block btn-default btn-choice">'+ val +'</a>')
     });
   }
 
@@ -101,6 +125,7 @@ $(document).ready(function() {
     var choice    = $(this).data('choice');
     var playerId  = $(this).data('player-id');
     var player    = $(this).data('player');
+    $('#game-results').html('<h3>&nbsp;</h3>').removeClass('flash');
 
     var playerRef = database.ref( 'players/' + playerId );
     playerRef.update({
@@ -109,8 +134,10 @@ $(document).ready(function() {
 
     $(this).parent().html( choice );
 
+    // Next Turn
     var nextTurn = ( player === 1 ) ? 2 : 1 ;
 
+    // Update Turn in DB
     database.ref().update({
       turn: nextTurn
     })
@@ -156,95 +183,82 @@ $(document).ready(function() {
 
       // Who won
       if ( player_1_choice == player_2_choice ) {
-        $('#game-results').html('Tied Game');
-        console.log('Tied');
+        $('#game-results').html('<h3>Tied Game</h3>').addClass('flash');
       }
 
       else if ( player_1_choice == 'Rock' ) {
-
         if ( player_2_choice == 'Paper' ) {
-          $('#game-results').html('Player 2 Won');
 
           player2wins++;
           player1losses++;
           updateWinsDB( 2, player2wins );
           updateLossesDB( 1, player1losses );
-          console.log('Player 2 Won');
         }
         else if ( player_2_choice == 'Scissors' ) {
-          $('#game-results').html('Player 1 Won');
 
           player1wins++;
           player2losses++;
           updateWinsDB( 1, player1wins );
           updateLossesDB( 2, player2losses );
-          console.log('Player 1 Won');
         }
-
       }
 
       else if ( player_1_choice == 'Paper' ) {
         if ( player_2_choice == 'Rock' ) {
-          $('#game-results').html('Player 1 Won');
 
           player1wins++;
           player2losses++;
           updateWinsDB( 1, player1wins );
           updateLossesDB( 2, player2losses );
-          console.log('Player 1 Won');
-
         }
         else if ( player_2_choice == 'Scissors' ) {
-          $('#game-results').html('Player 2 Won');
 
           player2wins++;
           player1losses++;
           updateWinsDB( 2, player2wins );
           updateLossesDB( 1, player1losses );
-          console.log('Player 2 Won');
-
         }
       }
 
       else if ( player_1_choice == 'Scissors' ) {
         if ( player_2_choice == 'Rock' ) {
-          $('#game-results').html('Player 2 Won');
 
           player2wins++;
           player1losses++;
           updateWinsDB( 2, player2wins );
           updateLossesDB( 1, player1losses );
-          console.log('Player 2 Won');
+        }
 
-        } else if (player_2_choice == 'Paper') {
-          $('#game-results').html('Player 1 Won');
+        else if (player_2_choice == 'Paper') {
 
           player1wins++;
           player2losses++;
           updateWinsDB( 1, player1wins );
           updateLossesDB( 2, player2losses );
-          console.log('Player 1 Won');;
-
         }
       }
 
     });
   }
 
-  // Update wind in DB
+  // Update wins in DB
   function updateWinsDB( player, wins ) {
     // console.log( 'Player: ' + player + ' Has: ' + wins );
     database.ref( 'players/' + playerKeys['player_'+ player ] ).update({
       wins: wins
     });
+
+    $('#game-results').html('<h3>Player ' + player + ' Won</h3>').addClass('flash');
   }
 
+  // Update losses in DB
   function updateLossesDB( player, losses ) {
     // console.log( 'Player: ' + player + ' Has: ' + losses );
     database.ref( 'players/' + playerKeys['player_'+ player ] ).update({
       losses: losses
     });
   }
+
 
   // Comment form when clicking submit
   $('#btn-comment-submit').on('click', function(e) {
@@ -290,27 +304,5 @@ $(document).ready(function() {
     var chatMessage = '<blockquote class="blockquote-message"><p>'+  message +'</p><footer>'+ sender +'</footer></blockquote>';
     $('#chat').append( chatMessage );
   }
-
-  // Updated Wins/Losses in DOM
-  database.ref( 'players/' + playerKeys['player_1'] ).on('value', function(snapshot) {
-
-    var wins = snapshot.val().wins;
-    var losses = snapshot.val().losses;
-
-    $('#player-box-1 .player-wins').html( wins );
-    $('#player-box-1 .player-losses').html( losses );
-
-  });
-
-  // Updated Wins/Losses in DOM
-  database.ref( 'players/' + playerKeys['player_2'] ).on('value', function(snapshot) {
-
-    var wins = snapshot.val().wins;
-    var losses = snapshot.val().losses;
-
-    $('#player-box-2 .player-wins').html( wins );
-    $('#player-box-2 .player-losses').html( losses );
-
-  });
 
 });

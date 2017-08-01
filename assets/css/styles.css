@@ -44,21 +44,31 @@ body {
 }
 .game-results {
 	color: #fff;
-	padding-top: 20px;
-	padding-bottom: 20px;
-}
-.players-row {
 	font-family: 'Bungee', cursive;
 	padding-top: 20px;
 	padding-bottom: 20px;
+	background: #272727;
+}
+.game-results h3 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.players-row {
+	font-family: 'Bungee', cursive;
+	padding-top: 50px;
+	padding-bottom: 50px;
 }
 .player .player-info{
 	margin-top: 0;
 	margin-bottom: 0;
 }
+.player-box {
+	border: solid 2px transparent;
+}
 .player-active {
 	color: #ffea00;
 	border: solid 2px #ffea00;
+	background: #272727;
 }
 .player-choices {
 	margin-top: 15px;
@@ -83,4 +93,13 @@ body {
 	display: inline-block;
 	margin-left: 10px;
 	margin-right: 10px;
+}
+.sep {
+	color: #666;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.tooltip {
+	font-size: 16px;
 }

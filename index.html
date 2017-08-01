@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>RPS-Multiplayer | Mario Melchor</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/animate.css">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link href="https://fonts.googleapis.com/css?family=Bungee|Roboto" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
@@ -33,22 +34,22 @@
   <div id="player" class="player"><h2 class="player-info">Hi, <span id="player-name" class="text-uppercase"></span> You are Player <span id="player-number"></span></h2></div><!-- /#player -->
 </div><!-- /.site-subheader -->
 
-<div id="game-results" class="game-results text-center"></div><!-- /#game-results -->
+<div id="game-results" class="game-results text-center text-uppercase animated infinite"><h3>&nbsp;</h3></div><!-- /#game-results -->
 
 <div class="site-container container">
 
   <div class="players-row row">
-    <div id="player-box-1" class="col-sm-6 text-center">
-      <h3 id="player-name-1" class="text-uppercase">Waiting for Player</h3>
+    <div id="player-box-1" class="player-box col-sm-6 text-center player-active">
+      <h3 id="player-name-1" class="text-uppercase animated flash infinite">Waiting for Player</h3>
 
       <div id="player-choices" class="player-choices"></div><!-- /#player-choices -->
-      <div class="player-stats text-uppercase"> Wins: <span class="player-wins">0</span> Losses: <span class="player-losses">0</span></div><!-- /.player-stats -->
+      <div class="player-stats text-uppercase"> <strong>Wins:</strong> <span class="player-wins">0</span> <span class="sep">|</span> <strong>Losses:</strong> <span class="player-losses">0</span></div><!-- /.player-stats -->
     </div><!-- /#player-box-1 -->
-    <div id="player-box-2" class="col-sm-6 text-center">
-      <h3 id="player-name-2" class="text-uppercase">Waiting for Player</h3>
+    <div id="player-box-2" class="player-box col-sm-6 text-center player-active">
+      <h3 id="player-name-2" class="text-uppercase animated flash infinite">Waiting for Player</h3>
 
       <div id="player-choices" class="player-choices"></div><!-- /#player-choices -->
-      <div class="player-stats text-uppercase"> Wins: <span class="player-wins">0</span> Losses: <span class="player-losses">0</span></div><!-- /.player-stats -->
+      <div class="player-stats text-uppercase"> <strong>Wins:</strong> <span class="player-wins">0</span> <span class="sep">|</span> <strong>Losses:</strong> <span class="player-losses">0</span></div><!-- /.player-stats -->
     </div><!-- /#player-box-2 -->
   </div><!-- /.row -->
 
@@ -75,8 +76,6 @@
       </div><!-- /.well -->
     </div><!-- /.col -->
   </div><!-- /.row -->
-
-  <div id="connected-viewers"></div>
 
 </div><!-- /site-.container -->
 
